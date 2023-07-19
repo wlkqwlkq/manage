@@ -1,0 +1,231 @@
+<html>
+<meta charset="UTF-8"/>
+<title>数据结构</title>
+<body></body>
+<script>
+    class Student{
+        constructor(name,age,sex) {
+            this.name = name;
+            this.age = age;
+            this.sex = sex;
+        }
+    }
+    class ChainNode{
+        constructor(Student = null,Next = null,Last = null) {
+            this.Next = Next;
+            this.Last = Last;
+            this.Student = Student;
+        }
+    }
+    //链表
+    class ChainList{
+        //Next:指向下一个链的指针,Last:指向上一个链的指针
+        constructor() {
+            //链表的属性
+            this.First = null;
+            this.Length = 0;
+            //进行迭代的变量
+            this.ChainNode = new ChainNode();
+        }
+        //添加数据方法
+        Add(Student){
+            if(this.Length === 0){
+                //保存下链表第一个
+                this.ChainNode = new ChainNode(Student,null,null);
+                this.First = this.ChainNode;
+                this.Length++;
+            }else{
+                //为当前ChainNode的Next赋值，让其指向新的链，新的链的Last设置为当前的ChainNode
+                this.ChainNode.Next = new ChainNode(Student,null,this.ChainNode);
+                //将当前ChainNode移到下一个
+                this.ChainNode = this.ChainNode.Next;
+            }
+        }
+        //查询方法
+        Find(name){
+            //创建一个进行迭代的临时变量
+            let shortFirst = this.First;
+            //如果当前的链的学生名字不等于name，则移动到下一个链
+            while(shortFirst.Student.name!==name)
+            {
+                shortFirst = shortFirst.Next;
+            }
+            //如果找遍链表没找到，则返回空
+            if(shortFirst.Student.name!==name)
+                return null;
+            return shortFirst.Student;
+        }
+
+        //删除方法
+        Delete(name){
+            let shortFirst = this.First;
+            while (shortFirst.Student.name !== name){
+                shortFirst = shortFirst.Next;
+            }
+            if(shortFirst.Student.name !== name)
+                return console.log("没有叫"+name+"的学生，删除无效")
+
+            if (shortFirst.Last)
+                shortFirst.Last.Next = shortFirst.Next;
+            else
+                this.First = shortFirst.Next;
+            if (shortFirst.Next)
+                shortFirst.Next.Last = shortFirst.Last;
+            else
+                shortFirst.Last.Next = null;
+        }
+
+        //打印表
+        queryList(){
+            let shortFirst = this.First;
+            while (shortFirst !== null ){
+                console.log(shortFirst.Student)
+                shortFirst = shortFirst.Next
+            }
+        }
+    }
+
+    let ChainListInstance = new ChainList();
+    ChainListInstance.Add(new Student("小明1",20,"男"));
+    ChainListInstance.Add(new Student("小明",20,"男"));
+    ChainListInstance.Add(new Student("小红",21,"女"));
+    ChainListInstance.Add(new Student("小红2",22,"女"));
+    ChainListInstance.Add(new Student("小明2",20,"男"));
+    ChainListInstance.Add(new Student("小明3",20,"男"));
+    // console.log(ChainListInstance.Find("小红2"))
+    ChainListInstance.queryList();
+    ChainListInstance.Delete('小明1');
+    console.log("-------------------我是分割线-------------------")
+    console.log(ChainListInstance)
+    // ChainListInstance.queryList();
+
+
+    let text = 'a+b*c-d*e';
+    let shedTop = '';
+    let shed = [];
+    let newText = '';
+    let char2 = '';
+
+ //----------------------------------- 栈 ----------------------------------------
+
+    //中缀表达式转为后缀表达式
+    function suffix2(text){
+        for (let i=0;i<text.length;i++){
+            char2 = text.substring(i,i+1)
+            //判断当前字符是否为操作符
+            if (char2 === '+'||char2 === '-'||char2 === '*'||char2 === '/'){
+                //如果栈顶为空，则直接将当前操作符压入栈中
+                if (shedTop === ''){
+                    shed.push(char2);
+                    shedTop = char2;
+                }else if(!yxj(shedTop,char2)){
+                    //若栈顶优先级比当前操作符高，或两者优先级相等，则将栈顶弹出栈，然后将操作符压入栈中
+                    newText += shed.pop();
+                    if(shed.length !== 0)
+                        newText += shed.pop();
+                    shed.push(char2);
+                    shedTop = char2;
+                }else {
+                    //若栈顶优先级比当前操作符低，则将操作符压入栈中
+                    shed.push(char2);
+                    shedTop = char2;
+                }
+            }else //若不是操作符，则将当前字符加入到新文本中
+                newText += char2
+            // console.log('第'+i+'次循环',newText)
+        }
+        //在循环完成之后，如果栈里还有操作符，则把他们都弹出来
+        while(shed.length !== 0){
+            newText += shed.pop()
+        }
+        console.log(newText)
+    }
+    suffix2(text)
+
+    //判断优先级的方法
+    function yxj(x,y){ //x为栈顶，y为当前字符  x的优先级较小或者两者相等，则返回true，否则返回false
+        if ((x === '-' || x==='+') && (y === '*' || y === '/')) {
+            return true;
+        }
+        else
+            return false
+    }
+//------------------------------------栈结束-------------------------------------------------
+
+
+
+    function String1(){ let a = 0;}
+    console.log(String1)
+    console.log([])
+    console.log(new Array())
+    console.log({})
+    console.log(new Object())
+    function func(){}
+    let c = func;
+    String.prototype.func = func;
+
+    let i = new Number(4);
+    let s = new String("dsfasgsf");
+    let arr = new Array();
+    let obj = new Object();
+
+
+    function ff(){
+        return function (){
+            return function (){
+
+            }
+        }
+    }
+
+    class MyPromise{
+        constructor() {
+            this.value = 4;
+        }
+        then(value){
+            value(this.value,5);
+        }
+    }
+    let pro = new Promise(()=>{});
+    pro.then(res=>{})
+    let promise = new MyPromise();
+    promise.then((res,res1)=>{
+        console.log("res:",res,res1)
+    });
+    setTimeout(()=>{},4000)
+
+// --------------------------二叉树---------------------------------------------------------------------------------------
+    let root = {
+        left:{
+            left: {
+                left:{
+                    right:{}
+                }
+            },
+            right:{
+                left:{
+
+                }
+            }
+        },
+        right:{
+            left: {},right:{}
+        }
+    }
+
+    function getH(root) {
+        if(!root) return -1;
+        return max(getH(root.left),getH(root.right))+1
+    }
+    function max(a,b) {
+        if (a>b)
+            return a;
+        else
+            return b;
+    }
+
+    let hei = getH(root);
+    console.log("二叉树的高度是",hei)
+// --------------------------二叉树结束---------------------------------------------------------------------------------------
+</script>
+</html>

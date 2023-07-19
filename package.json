@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "element-ui": "^2.15.13",
+    "gsap": "^3.12.2",
+    "js-cookie": "^3.0.1"
+  }
+}
